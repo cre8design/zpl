@@ -1,4 +1,4 @@
-export class ZPL {
+export class ZPLBuilder {
     private accumulator: string[] = []
 
     public start() {

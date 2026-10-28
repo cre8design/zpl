@@ -1,5 +1,5 @@
 import { createConnection } from "node:net"
-import { ZPL } from "./zpl"
+import { ZPLBuilder } from "./zpl"
 
 const MM_TO_INCH = 25.4
 
@@ -29,12 +29,12 @@ export class Printer {
     }
 
     public async configurion() {
-        const zplBuffer = new ZPL().configuration().assemble()
+        const zplBuffer = new ZPLBuilder().configuration().assemble()
         return this.send(zplBuffer)
     }
 
     public async calibrate() {
-        const zplBuffer = new ZPL().calibrate().assemble()
+        const zplBuffer = new ZPLBuilder().calibrate().assemble()
         return this.send(zplBuffer)
     }
 

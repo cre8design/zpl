@@ -4,7 +4,7 @@ const PBM_TAB_TOKEN = 0x09
 const PBM_LINE_FEED_TOKEN = 0x0a
 const PBM_CARRIAGE_RETURN_TOKEN = 0x0d
 
-export class Pbm {
+export class PbmParser {
     private pos: number = 0
 
     constructor(private readonly buf: Buffer) {}

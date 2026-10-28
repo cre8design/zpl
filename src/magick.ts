@@ -2,7 +2,7 @@ import { execFile } from "node:child_process"
 import { promisify } from "node:util"
 import { readFile, unlink } from "node:fs/promises"
 
-export class Magick {
+export class ImageMagickCmdBuilder {
     private _input: string = ""
 
     private _output: string = ""
@@ -70,10 +70,26 @@ export class Magick {
         await promisify(execFile)("magick", this.accumulator)
     }
 
-    public async toBuffer() {
+    public async toBuffers(): Promise<Buffer[]> {
         await this.exec()
-        const file = await readFile(this._output)
-        await unlink(this._output)
-        return file
+        const buffers: Buffer[] = []
+
+        let page = 0
+        while (true) {
+            const file = this._output.replace(/%d/g, page.toString())
+            try {
+                const buffer = await readFile(file)
+                buffers.push(buffer)
+                await unlink(file)
+                page++
+            } catch (error) {
+                if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+                    break
+                }
+                throw error
+            }
+        }
+
+        return buffers
     }
 }
